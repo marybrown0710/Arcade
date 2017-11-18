@@ -7,13 +7,20 @@ that the Markdown is transformed into nice looking HTML.
 
 Here is a sample entry (delete this line; also: feel free to copy/paste/modify):
 
-## SUN 2017-11-12 @ 11:55 PM EST
+## SUN 2017-11-17 @ 11:55 PM EST
 
 1. **DONE:** Downloaded the skeleton code.
+- Deligation of task 
+	Arianna : Game 1
+	Mary : Game 2
+- PseudoCode for Code Organization
 
 2. **TODO:** Finish reading the project description.
+- Selection of Game
+- Construction of Stage 
 
-3. **PROB:** Had a hard time scheduling physicial meetings with each other at
-   first, but now that we've settled on a regular day/time things are looking
-   great! 
+- Implementation of Game
+	(will be started by next push).
+
+3. **PROB:** No problems!! (yeeeett!)
 
