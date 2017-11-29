@@ -35,6 +35,7 @@ Here is a sample entry (delete this line; also: feel free to copy/paste/modify):
 2. **TODO:** 
 - Game Implementation & Error Fix
 - Read rest of project description
+- Delegation of REFLECTION.md completion
 
 3. **PROB:** No problems!! (yeeeett!)
 
