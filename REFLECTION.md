@@ -24,3 +24,17 @@ Here is a sample entry (delete this line; also: feel free to copy/paste/modify):
 
 3. **PROB:** No problems!! (yeeeett!)
 
+## TUES 2017-11-29 @ 11:55 PM EST
+
+1. **DONE:** 
+- Creation of Background : Arianna
+- Creation of Checkers   : Arianna
+- Creation of Tetris : Mary 
+
+
+2. **TODO:** 
+- Game Implementation & Error Fix
+- Read rest of project description
+
+3. **PROB:** No problems!! (yeeeett!)
+
