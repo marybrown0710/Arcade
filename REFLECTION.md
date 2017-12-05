@@ -41,12 +41,14 @@ that the Markdown is transformed into nice looking HTML.
 
 1. **DONE:**
 - Tetris Game Implementation : Mary
+- Tetris Game Error Fix: Mary and Arianna
 - Creation of Tetris Display : Mary
 
 
 2. **TODO:**
 - Error Fix for Tetris Implementation
-- Implementation of Checkers
+- Further implementation of Checkers
+
 
 3. **PROB:**
-- Momentary loss of Checkers and Tetris classes
+- Momentary misplacement of Tetris and Checkers Classes
