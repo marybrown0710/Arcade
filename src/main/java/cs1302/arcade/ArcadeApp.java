@@ -40,6 +40,7 @@ public class ArcadeApp extends Application {
     Menu gameFile = new Menu("File");
     Menu gameHelp = new Menu("Help");
     Checkers ch = new Checkers();
+    Tetris tet  = new Tetris();
     Pane pane1 = new Pane();
     Pane pane2 = ch.createBoard();
     StackPane sPane = new StackPane();
@@ -92,11 +93,17 @@ public class ArcadeApp extends Application {
 	vBox.getChildren().addAll(menubar,iv);
         Scene scene = new Scene(vBox,1000,650);
 	
-	//currently opens checker button but will have option to open both games eventually
+	//opens checker game
 	checkers.setOnAction(actionEvent -> {
 		sPane.getChildren().addAll(vBox,vBox2);
 		stage.setScene(new Scene(sPane,1000,650));
         });
+
+	// opens tetris game
+	StackPane tPane = new StackPane();
+	tetris.setOnAction(actionEvent -> {
+		//tPane.getChildren().add
+	    });
 
 	//exits game without exiting application 
 	exitGame.setOnAction(actionEvent -> {
