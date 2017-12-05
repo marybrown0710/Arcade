@@ -45,11 +45,11 @@ public class ArcadeApp extends Application {
     Pane pane2 = ch.createBoard();
     StackPane sPane = new StackPane();
 
-    VBox vBox3 = new VBox();
-    Tetris tet = new Tetris();
+    //VBox vBox3 = new VBox();
+    //Tetris tet = new Tetris();
     //Graphics g = new Graphics();  //???
     //Pane pane3 = tet.init();  // ???
-    StackPane tPane = new StackPane();
+    //StackPane tPane = new StackPane();
 
     @Override
     public void start(Stage stage) {
@@ -68,7 +68,8 @@ public class ArcadeApp extends Application {
 	gameFile.getItems().add(exitGame);
 	menubar2.prefWidthProperty().bind(vBox2.widthProperty());
 	vBox2.getChildren().addAll(menubar2,pane2);
-	vBox3.getChildren().addAll(menubar2,pane3);
+	//vBox3.getChildren().addAll(menubar2,pane3);
+
 	//	Group group = new Group();           // main container
 	//	Rectangle r = new Rectangle(20, 20); // some rectangle
 	//	r.setX(50);                          // 50px in the x direction (right)
