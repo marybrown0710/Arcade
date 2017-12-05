@@ -102,7 +102,9 @@ public class ArcadeApp extends Application {
 	// opens tetris game
 	StackPane tPane = new StackPane();
 	tetris.setOnAction(actionEvent -> {
-		//tPane.getChildren().add
+		
+		tPane.getChildren().addAll(vBox,vBox2);
+		stage.setScene(new Scene(tPane, 1000, 650));
 	    });
 
 	//exits game without exiting application 
