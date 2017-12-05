@@ -18,6 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+//import java.awt.Graphics;
 
 public class ArcadeApp extends Application {
 
@@ -40,10 +41,15 @@ public class ArcadeApp extends Application {
     Menu gameFile = new Menu("File");
     Menu gameHelp = new Menu("Help");
     Checkers ch = new Checkers();
-    Tetris tet  = new Tetris();
     Pane pane1 = new Pane();
     Pane pane2 = ch.createBoard();
     StackPane sPane = new StackPane();
+
+    VBox vBox3 = new VBox();
+    Tetris tet = new Tetris();
+    //Graphics g = new Graphics();  //???
+    Pane pane3 = tet.init();  // ???
+    StackPane tPane = new StackPane();
 
     @Override
     public void start(Stage stage) {
@@ -62,6 +68,7 @@ public class ArcadeApp extends Application {
 	gameFile.getItems().add(exitGame);
 	menubar2.prefWidthProperty().bind(vBox2.widthProperty());
 	vBox2.getChildren().addAll(menubar2,pane2);
+	vBox3.getChildren().addAll(menubar2,pane3);
 	//	Group group = new Group();           // main container
 	//	Rectangle r = new Rectangle(20, 20); // some rectangle
 	//	r.setX(50);                          // 50px in the x direction (right)
@@ -100,10 +107,10 @@ public class ArcadeApp extends Application {
         });
 
 	// opens tetris game
-	StackPane tPane = new StackPane();
+	
 	tetris.setOnAction(actionEvent -> {
 		
-		tPane.getChildren().addAll(vBox,vBox2);
+		tPane.getChildren().addAll(vBox,vBox3);
 		stage.setScene(new Scene(tPane, 1000, 650));
 	    });
 
