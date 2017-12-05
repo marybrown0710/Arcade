@@ -48,7 +48,7 @@ public class ArcadeApp extends Application {
     VBox vBox3 = new VBox();
     Tetris tet = new Tetris();
     //Graphics g = new Graphics();  //???
-    Pane pane3 = tet.init();  // ???
+    //Pane pane3 = tet.init();  // ???
     StackPane tPane = new StackPane();
 
     @Override
@@ -108,11 +108,11 @@ public class ArcadeApp extends Application {
 
 	// opens tetris game
 	
-	tetris.setOnAction(actionEvent -> {
+	// tetris.setOnAction(actionEvent -> {
 		
-		tPane.getChildren().addAll(vBox,vBox3);
-		stage.setScene(new Scene(tPane, 1000, 650));
-	    });
+	// 	tPane.getChildren().addAll(vBox,vBox3);
+	// 	stage.setScene(new Scene(tPane, 1000, 650));
+	//     });
 
 	//exits game without exiting application 
 	exitGame.setOnAction(actionEvent -> {

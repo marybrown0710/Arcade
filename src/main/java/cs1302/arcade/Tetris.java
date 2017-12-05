@@ -8,10 +8,9 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Timer;
-import javafx.scene.layout.StackPane;
 
 
-public class Tetris extends StackPane implements KeyListener{
+public class Tetris extends Applet implements KeyListener{
 
 	private static final int HEIGHT = 680, WIDTH = 640, BLOCK_SIZE = 32;
 	private static final int X_OFFSET = 20, Y_OFFSET = 20, NEXTPIECEX = 360, NEXTPIECEY = 40;
@@ -25,23 +24,29 @@ public class Tetris extends StackPane implements KeyListener{
 	private static Timer timer;
 	private static boolean gameOver = false;
 	
+<<<<<<< HEAD
     //@Override
 	public StackPane init() {
 	    StackPane pane = new StackPane();
+=======
+    @Override
+	public void init() {
+	
+>>>>>>> 46ec1e0ae3c08486d36bb4baaf797888e85b1c98
 
-		pane.setPrefSize(WIDTH, HEIGHT);
+		setSize(WIDTH, HEIGHT);
 		currentPiece = new Piece();
 		nextPiece = new Piece();
 		board = new Board();
 		timer = new Timer();
 		timerTask = new TetrisTimer(this);
 		timer.scheduleAtFixedRate(timerTask, 1000, 1000);
-		//setFocusable(true);
-		//this.requestFocusInWindow();
-		//this.addKeyListener(this);
+		setFocusable(true);
+		this.requestFocusInWindow();
+		this.addKeyListener(this);
 		repaint();
 
-		return pane;
+		//return pane;
 	}
 	
 	@Override
