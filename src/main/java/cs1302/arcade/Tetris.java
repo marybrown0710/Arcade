@@ -27,7 +27,7 @@ public class Tetris extends StackPane implements KeyListener{
 	
     //@Override
 	public StackPane init() {
-	    StackPane pane = StackPane();
+	    StackPane pane = new StackPane();
 
 		pane.setPrefSize(WIDTH, HEIGHT);
 		currentPiece = new Piece();
