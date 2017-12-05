@@ -8,7 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Timer;
-
+import javafx.scene.layout.StackPane;
 
 public class Tetris extends Applet implements KeyListener{
 
@@ -24,15 +24,15 @@ public class Tetris extends Applet implements KeyListener{
 	private static Timer timer;
 	private static boolean gameOver = false;
 	
-<<<<<<< HEAD
-    //@Override
-	public StackPane init() {
-	    StackPane pane = new StackPane();
-=======
-    @Override
+
+    // @Override
+    //	public StackPane init() {
+    //	    StackPane pane = new StackPane();
+    //	}
+
+	@Override
 	public void init() {
 	
->>>>>>> 46ec1e0ae3c08486d36bb4baaf797888e85b1c98
 
 		setSize(WIDTH, HEIGHT);
 		currentPiece = new Piece();
