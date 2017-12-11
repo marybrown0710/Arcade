@@ -18,7 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-//import java.awt.Graphics;
+import java.awt.Graphics;
 
 public class ArcadeApp extends Application {
 
@@ -42,14 +42,14 @@ public class ArcadeApp extends Application {
     Menu gameHelp = new Menu("Help");
     Checkers ch = new Checkers();
     Pane pane1 = new Pane();
-    Pane pane2 = ch.createBoard();
+    Group chG = ch.createBoard();
     StackPane sPane = new StackPane();
 
-    //VBox vBox3 = new VBox();
-    //Tetris tet = new Tetris();
-    //Graphics g = new Graphics();  //???
-    //Pane pane3 = tet.init();  // ???
-    //StackPane tPane = new StackPane();
+    VBox vBox3 = new VBox();
+    Tetris tet = new Tetris();
+    // Graphics g = new Graphics();  //???
+    // Pane pane3 = tet.init();  // ???
+    StackPane tPane = new StackPane();
 
     @Override
     public void start(Stage stage) {
@@ -67,21 +67,15 @@ public class ArcadeApp extends Application {
 	menubar2.getMenus().addAll(gameFile,gameHelp);
 	gameFile.getItems().add(exitGame);
 	menubar2.prefWidthProperty().bind(vBox2.widthProperty());
-	vBox2.getChildren().addAll(menubar2,pane2);
-	//vBox3.getChildren().addAll(menubar2,pane3);
+	vBox2.getChildren().addAll(menubar2,chG);
+	//	vBox3.getChildren().addAll(menubar2,pane3);
 
-	//	Group group = new Group();           // main container
-	//	Rectangle r = new Rectangle(20, 20); // some rectangle
-	//	r.setX(50);                          // 50px in the x direction (right)
-	//	r.setY(50);                          // 50ps in the y direction (down)
-      	//group.getChildren().add(vBox);          // add to main container
+		Group group = new Group();           // main container
+		Rectangle r = new Rectangle(20, 20); // some rectangle
+		r.setX(50);                          // 50px in the x direction (right)
+		r.setY(50);                          // 50ps in the y direction (down)
+		//   group.getChildren().add(vBox);          // add to main container
 
-	// when the user clicks on the rectangle, send to random position
-	//	r.setOnMouseClicked(event -> {
-	//	System.out.println(event);
-	//	r.setX(rng.nextDouble() * (700 - r.getWidth()));
-	//	r.setY(rng.nextDouble() * (700 - r.getHeight()));
-	//  });
 
 	// when the user presses left and right, move the rectangle
 	//	group.setOnKeyPressed(event -> {
@@ -99,27 +93,31 @@ public class ArcadeApp extends Application {
 	iv.setImage(bg1);
 	iv.fitWidthProperty().bind(stage.widthProperty());
 	vBox.getChildren().addAll(menubar,iv);
-        Scene scene = new Scene(vBox,1000,650);
+	Scene scene = new Scene(vBox,1000,650);
 	
 	//opens checker game
 	checkers.setOnAction(actionEvent -> {
+		sPane.getChildren().clear();
 		sPane.getChildren().addAll(vBox,vBox2);
 		stage.setScene(new Scene(sPane,1000,650));
         });
 
 	// opens tetris game
 	
-	// tetris.setOnAction(actionEvent -> {
+	//	tetris.setOnAction(actionEvent -> {
 		
-	// 	tPane.getChildren().addAll(vBox,vBox3);
-	// 	stage.setScene(new Scene(tPane, 1000, 650));
-	//     });
+	//	tPane.getChildren().addAll(vBox,vBox3);
+	//	stage.setScene(new Scene(tPane, 1000, 650));
+	//   });
 
 	//exits game without exiting application 
 	exitGame.setOnAction(actionEvent -> {
-		VBox v1 = new VBox();
-		v1.getChildren().addAll(menubar,iv);
-		stage.setScene(new Scene(v1,1000,650));
+		//VBox v1 = new VBox();
+		vBox.getChildren().clear();
+		menubar.getMenus().clear();
+		menubar.getMenus().addAll(fileMenu, optionMenu,helpMenu);
+		vBox.getChildren().addAll(menubar,iv);
+		stage.setScene(scene);
 	    });
 
 	//changes background when pressed
@@ -132,10 +130,12 @@ public class ArcadeApp extends Application {
 		    {
 			iv.setImage(bg1);
 		    }
-  
-		vBox.getChildren().clear();
-		vBox.getChildren().addAll(menubar,iv);
-		stage.setScene(scene);
+
+       	menubar.getMenus().clear();
+	menubar.getMenus().addAll(fileMenu,optionMenu,helpMenu);
+       	vBox.getChildren().clear();		
+	vBox.getChildren().addAll(menubar,iv);
+       	stage.setScene(scene);
 	    });
 
 	//exits application

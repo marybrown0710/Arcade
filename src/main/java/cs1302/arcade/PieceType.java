@@ -1,24 +1,14 @@
 package cs1302.arcade;
 
-public class PieceType {
+public enum PieceType {
 
-    final int dir;
+    RED(1),WHITE(-1);
 
-    public PieceType(int dir)
-    {
-	this.dir = dir;
-    }
+    final int movDir;
 
-    boolean pieceRed(int x, int y)
-    {
-	if ((x+y) <= 9)
-	    {
-		return true;
-	    }
-	else
-	    {
-		return false;
-	    }
-    }
+    PieceType(int movDir)
+	{
+	    this.movDir = movDir;
+	}
 
 }
