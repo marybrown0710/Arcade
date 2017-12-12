@@ -70,10 +70,10 @@ public class ArcadeApp extends Application {
 	vBox2.getChildren().addAll(menubar2,chG);
 	//	vBox3.getChildren().addAll(menubar2,pane3);
 
-		Group group = new Group();           // main container
-		Rectangle r = new Rectangle(20, 20); // some rectangle
-		r.setX(50);                          // 50px in the x direction (right)
-		r.setY(50);                          // 50ps in the y direction (down)
+	//		Group group = new Group();           // main container
+	//	Rectangle r = new Rectangle(20, 20); // some rectangle
+	//	r.setX(50);                          // 50px in the x direction (right)
+	//	r.setY(50);                          // 50ps in the y direction (down)
 		//   group.getChildren().add(vBox);          // add to main container
 
 
@@ -112,10 +112,8 @@ public class ArcadeApp extends Application {
 
 	//exits game without exiting application 
 	exitGame.setOnAction(actionEvent -> {
-		//VBox v1 = new VBox();
+		//	VBox v1 = new VBox();
 		vBox.getChildren().clear();
-		menubar.getMenus().clear();
-		menubar.getMenus().addAll(fileMenu, optionMenu,helpMenu);
 		vBox.getChildren().addAll(menubar,iv);
 		stage.setScene(scene);
 	    });

@@ -22,11 +22,13 @@ public class Checkers{
     public static final int WIDTH = 8;
     public static final int HEIGHT = 8;
 
-
+    //actual array
     CheckersTile[][] chBoard = new CheckersTile[WIDTH][HEIGHT];
+
     Group tileGroup = new Group();
     Group pieceGroup = new Group();
-    int redCount, whiteCount;
+    int redCount = 12;
+    int whiteCount = 12;
 
     public Checkers()
     {
@@ -36,7 +38,6 @@ public class Checkers{
     Group createBoard()
     {
 	Group root = new Group();
-	//	root.setPrefSize(WIDTH * TILE_SIZE,HEIGHT * TILE_SIZE);
 	root.prefWidth(WIDTH * TILE_SIZE);
 	root.prefHeight(HEIGHT * TILE_SIZE);
 	root.getChildren().addAll(tileGroup,pieceGroup);
@@ -53,11 +54,13 @@ public class Checkers{
 		    if (c <= 2 && (r + c) % 2 != 0)
 			{
 			    piece = makePiece(PieceType.RED,r,c);
+			    Game(piece);
 			}
 
 		    if (c >= 5 && (r + c) % 2 != 0)
 			{
 			    piece = makePiece(PieceType.WHITE,r,c);
+			    Game(piece);
 			}
 
 		    if (piece != null)
@@ -68,12 +71,7 @@ public class Checkers{
 		}
 	   }
 	return root;
-	   } 
-
-    //    MoveResult tryMove(CheckersPiece piece,int newX,int newY)
-    // {
-    //	return new MoveResult(MoveType.NONE);
-    //}
+    } 
 
     private int toBoard(double pixel)
     {
@@ -83,6 +81,11 @@ public class Checkers{
    CheckersPiece makePiece(PieceType type, int x, int y) { 
          CheckersPiece piece = new CheckersPiece(type, x, y); 
  
+	 return piece;
+   }
+
+    public void Game(CheckersPiece piece)
+    {
          piece.setOnMouseReleased(e -> { 
              int newX = toBoard(piece.getLayoutX()); 
              int newY = toBoard(piece.getLayoutY()); 
@@ -93,55 +96,83 @@ public class Checkers{
 	     int x0 = toBoard(piece.getOldX());
 	     int y0 = toBoard(piece.getOldY());
  
-             if (newX < 0 || newY < 0 || newX >= WIDTH || newY >= HEIGHT) { 
+             if (newX < 0 || newY < 0 || newX >= WIDTH || newY >= HEIGHT || chBoard[newX][newY].pieceOn() == true || (newX + newY) % 2 == 0) { 
                  result = new MoveResult(MoveType.NONE); 
 		 piece.abortMove();
-             } else { 
-                 	
-	if (chBoard[newX][newY].pieceOn() == true || (newX + newY) % 2 == 0)
-	    {
-		result = new MoveResult(MoveType.NONE);
-		piece.abortMove();
-	    }
-	if (Math.abs(newX - x0) == 1 && newY - y0 == piece.getType().movDir)
-	    {
-		result = new MoveResult(MoveType.NORMAL);
-		piece.move(newX,newY);
-		chBoard[x0][y0].setPiece(null);
-		chBoard[newX][newY].setPiece(piece);
-	    }
-	else if(Math.abs(newX - x0) == 1 && newY - y0 != piece.getType().movDir)
-	    {
-		piece.abortMove();
-	    }
-
-	if (Math.abs(newX - x0) == 2 && newY - y0 == piece.getType().movDir * 2)
-	    {
-		int x1 = x0 + (newX - x0) / 2;
-		int y1 = y0 + (newY - y0) / 2;
-
-		if (chBoard[x1][y1].pieceOn() && chBoard[x1][y1].getChPiece().getType() != piece.getType() && chBoard[newX][newY].pieceOn() == false)
-		    {
-			result = new MoveResult(MoveType.KILL, chBoard[x1][y1].getChPiece());
-			piece.move(newX,newY);
-			chBoard[x0][y0].setPiece(null);
-			chBoard[newX][newY].setPiece(piece);
-
-			CheckersPiece otherP = result.getPiece();
-			pieceGroup.getChildren().remove(otherP);
-		    }
-	    } 
-	else if (Math.abs(newX - x0) == 2 && newY - y0 != piece.getType().movDir * 2)
-	    {
-		piece.abortMove();
-	    }
-	     }//else
-         }); 
-	 //	 redCount = updatePieceCount(PieceType.RED);
-	 // whiteCount = updatePieceCount(PieceType.WHITE);
-	 return piece;
-   }
-
+             } 
+	     else 
+		 {                  	
+		     if(Math.abs(newX - x0) == 1 && newY - y0 == piece.getType().movDir)
+		     {
+			 result = new MoveResult(MoveType.NORMAL);
+			 piece.move(newX,newY);
+			 chBoard[x0][y0].setPiece(null);
+			 chBoard[newX][newY].setPiece(piece);
+		     }
+		     else if(Math.abs(newX - x0) == 1 && newY - y0 != piece.getType().movDir)
+		     {
+			 piece.abortMove();
+		     }
+		     else if(Math.abs(newX - x0) == 2 && newY - y0 != piece.getType().movDir * 2)
+		     {
+			 piece.abortMove();
+		     }
+		     else if(Math.abs(newX - x0) == 2 && newY - y0 == piece.getType().movDir * 2)
+		     {
+			 int x1 = x0 + (newX - x0) / 2;
+			 int y1 = y0 + (newY - y0) / 2;
+			 if (chBoard[x1][y1].pieceOn() && chBoard[x1][y1].getChPiece().getType() != piece.getType())
+			     {
+				 result = new MoveResult(MoveType.KILL, chBoard[x1][y1].getChPiece());
+				 piece.move(newX,newY);
+				 chBoard[x0][y0].setPiece(null);
+				 chBoard[newX][newY].setPiece(piece);
+				 CheckersPiece otherP = result.getPiece();
+				 pieceGroup.getChildren().remove(otherP);
+				 if (otherP.getType() == PieceType.RED)
+				     {
+					 redCount--;
+				     }
+				 else
+				     {
+					 whiteCount--;
+				     }
+			     }
+			 else
+			     {
+				 piece.abortMove();
+			     }
+		     } //elseif
+		 }//else
+	     //	     for (int i = 0; i < 8; i++)
+	     // {
+	     //	 for(int v = 0; v < 8; v++)
+	     //	     {
+	     //		if(chBoard[i][v].pieceOn() == true)
+	     //		    {
+	     //			if (chBoard[i][v].getChPiece().getType() == PieceType.RED)
+	     //			    {
+	     //				redCount++;
+	     //			    }
+	     //			else if (chBoard[i][v].getChPiece().getType() == PieceType.WHITE)
+	     //			    {
+	     //				whiteCount++;
+	     //			    }
+	     //		    }
+	     //	     }//for
+	     // }//for
+	     System.out.println("RED PLAYER SCORE: " + (12 - whiteCount));
+	     System.out.println("WHITE PLAYER SCORE: " + (12 - redCount));
+	     if (12 - whiteCount == 0)
+		 {
+		     System.out.println("Game Over. RED Wins!!");
+		 }
+	     else if (12 - redCount == 0)
+		 {
+		     System.out.println("Game Over. WHITE Wins!!");
+		 }
+	     });
+    }//Game
 
     //   public void PlayGame()
     // {
@@ -149,8 +180,8 @@ public class Checkers{
     //	createBoard();
     //	System.out.println("Click the space where you want to move")
     // setOnMouseClicked()( e -> {
-    //int desiredX = toBoard(getX())
-    //int desiredY = toBoard(getY())
+    // int desiredX = toBoard(getX())
+    // int desiredY = toBoard(getY())
     //});
     //if clickCount == 1
     //{
@@ -158,22 +189,7 @@ public class Checkers{
 
     //  public int updatePieceCount(PieceType type)
     // { 
-    //	for (int i = 0; i < 8; i++)
-    //	    {
-    //		for(int v = 0; v < 8; v++)
-    //		    {
-    //			if(chBoard[i][v].pieceOn() == true)
-    //			    {if(chBoard[i][v].getChPiece().getType() == type && type == PieceType.RED)
-    //				    {
-    //					redCount++;
-    ///				    }
-    ///				else if (chBoard[i][v].getChPiece().getType() == type && type == PieceType.WHITE)
-    //				    {
-    //					whiteCount++;
-    //				    }
-    //			    }
-    ///		    }
-    //	    }
+    //	
     //	if (type == PieceType.RED)
     //	    {
     //		return redCount;
