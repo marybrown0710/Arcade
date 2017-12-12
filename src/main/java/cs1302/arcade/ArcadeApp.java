@@ -18,7 +18,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
 //import java.awt.Graphics;
+import java.lang.*;
+import javafx.stage.*;
 
 public class ArcadeApp extends Application {
 
@@ -45,11 +48,11 @@ public class ArcadeApp extends Application {
     Pane pane2 = ch.createBoard();
     StackPane sPane = new StackPane();
 
-    //VBox vBox3 = new VBox();
+    VBox vBox3 = new VBox();
     //Tetris tet = new Tetris();
     //Graphics g = new Graphics();  //???
-    //Pane pane3 = tet.init();  // ???
-    //StackPane tPane = new StackPane();
+    //Pane pane3 = tet.createContent();  // ???
+    StackPane tPane = new StackPane();
 
     @Override
     public void start(Stage stage) {
@@ -70,7 +73,7 @@ public class ArcadeApp extends Application {
 	vBox2.getChildren().addAll(menubar2,pane2);
 	//vBox3.getChildren().addAll(menubar2,pane3);
 
-	//	Group group = new Group();           // main container
+	//Group group = new Group();           // main container
 	//	Rectangle r = new Rectangle(20, 20); // some rectangle
 	//	r.setX(50);                          // 50px in the x direction (right)
 	//	r.setY(50);                          // 50ps in the y direction (down)
@@ -107,13 +110,43 @@ public class ArcadeApp extends Application {
 		stage.setScene(new Scene(sPane,1000,650));
         });
 
-	// opens tetris game
+	//opens tetris game
 	
-	// tetris.setOnAction(actionEvent -> {
-		
-	// 	tPane.getChildren().addAll(vBox,vBox3);
-	// 	stage.setScene(new Scene(tPane, 1000, 650));
-	//     });
+	tetris.setOnAction(actionEvent -> {
+		Thread t = new Thread(() -> {
+			Stage tetStage = new Stage();
+			
+			tetStage.initModality(Modality.APPLICATION_MODAL);
+			
+			Tetris tet = new Tetris();
+			tet.start(tetStage);
+			//Make Scene from root
+			Group root = tet.getRoot();
+			
+			Scene tetScene = tet.getTheScene();
+			//tet.keyReleased(tetScene);
+			//TODO: CALL IN SCENE
+			
+			BorderPane tPane = new BorderPane();
+			tPane.prefHeightProperty().bind(tetScene.heightProperty());
+			tPane.prefWidthProperty().bind(tetScene.widthProperty());
+
+			Platform.runLater(() -> {
+				tPane.setTop(vBox);
+				root.getChildren().add(tPane);
+			    });
+			
+			tetStage.setTitle("Tetris!");
+			
+			tetStage.sizeToScene();
+			tetStage.show();
+			//Show new stage with root.
+			//tet.start(new Stage());
+			System.out.println("it worked!");
+		    });
+	      t.setDaemon(true);
+	      t.start();
+	    });
 
 	//exits game without exiting application 
 	exitGame.setOnAction(actionEvent -> {
@@ -165,6 +198,9 @@ public class ArcadeApp extends Application {
 	    System.exit(1);
 	} // try
     } // main
+
+    
+		    
 
 } // ArcadeApp
 
