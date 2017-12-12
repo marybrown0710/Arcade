@@ -6,31 +6,68 @@ import javafx.scene.paint.Color;
 
 public class CheckersPiece extends StackPane {
 
-    PieceShape piece; 
+    PieceType type;
 
-    public CheckersPiece(Color col,int x, int y)
+    private double mouseX, mouseY;
+    private double oldX, oldY;
+
+    public PieceType getType()
     {
-	relocate(x * Checkers.TILE_SIZE, y * Checkers.TILE_SIZE);
-
-	Ellipse gp = new Ellipse(Checkers.TILE_SIZE * .3125, Checkers.TILE_SIZE * .26);
-
-	if (y <= 2 && (x + y) % 2 != 0)
-	    {
-		gp.setFill(Color.RED);
-	    }
-	else
-	    {
-		gp.setFill(Color.WHITE);
-	    }
-
-	gp.setStroke(Color.BLUE);
-	gp.setStrokeWidth(Checkers.TILE_SIZE * .03);
-	gp.setTranslateX((Checkers.TILE_SIZE - Checkers.TILE_SIZE * .3125 * 2)/2);
-	gp.setTranslateY((Checkers.TILE_SIZE - Checkers.TILE_SIZE * .26 * 2)/2);
-
-	getChildren().addAll(gp);
+	return type;
     }
 
+    public double getOldX()
+    {
+	return oldX;
+    }
+
+    public double getOldY()
+    { 
+	return oldY;
+    }
+
+    public CheckersPiece(PieceType type,int x, int y)
+    {
+	this.type = type;
+
+	move(x,y);
+
+	Ellipse ellipse = new Ellipse(Checkers.TILE_SIZE * .3125, Checkers.TILE_SIZE * .26);
+	ellipse.setFill(type == PieceType.RED ? Color.RED : Color.WHITE);
+	ellipse.setStroke(Color.BLUE);
+	ellipse.setStrokeWidth(Checkers.TILE_SIZE * .03);
+	ellipse.setTranslateX((Checkers.TILE_SIZE - Checkers.TILE_SIZE * .3125 * 2)/2);
+	ellipse.setTranslateY((Checkers.TILE_SIZE - Checkers.TILE_SIZE * .26 * 2)/2);
+
+	getChildren().addAll(ellipse);
+
+		setOnMousePressed(e -> {
+		mouseX = e.getSceneX();
+		mouseY = e.getSceneY();
+        });
+
+       	setOnMouseDragged(e -> {
+		relocate(e.getSceneX() - mouseX + oldX, e.getSceneY() - mouseY + oldY);
+		System.out.println("Mouse Dragged");
+	    });
+    }
+
+    public void move(int x, int y)
+    {
+	oldX = x * Checkers.TILE_SIZE;
+	oldY = y * Checkers.TILE_SIZE;
+	relocate(oldX, oldY);
+    }
+
+    public void movePiece(int x, int y)
+    {
+	relocate(x * Checkers.TILE_SIZE,y * Checkers.TILE_SIZE);
+    }
+
+    public void abortMove()
+    { 
+	relocate(oldX,oldY);
+    }
 }
 
 

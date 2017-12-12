@@ -10,6 +10,7 @@ import java.awt.event.KeyListener;
 //import java.util.Timer;
 import javafx.scene.layout.*;
 import java.util.Timer;
+<<<<<<< HEAD
 import javafx.scene.*;
 import javafx.scene.text.*;
 import javafx.scene.paint.Color;
@@ -111,6 +112,48 @@ public class Tetris extends Group {
 				   
 				      }
 				  });
+=======
+import javafx.scene.layout.StackPane;
+
+public class Tetris extends Applet implements KeyListener{
+
+	private static final int HEIGHT = 680, WIDTH = 640, BLOCK_SIZE = 32;
+	private static final int X_OFFSET = 20, Y_OFFSET = 20, NEXTPIECEX = 360, NEXTPIECEY = 40;
+	private static Piece currentPiece, nextPiece;
+	private static Board board;
+	private static int level = 1;
+	private static double score;
+	private static int lines;
+	private final static Color[] colors = {Color.WHITE, Color.ORANGE, Color.GREEN, Color.CYAN, Color.MAGENTA, Color.BLUE, Color.YELLOW, Color.RED};
+	private static TetrisTimer timerTask;
+	private static Timer timer;
+	private static boolean gameOver = false;
+	
+
+    // @Override
+    //	public StackPane init() {
+    //	    StackPane pane = new StackPane();
+    //	}
+
+	@Override
+	public void init() {
+	
+
+		setSize(WIDTH, HEIGHT);
+		currentPiece = new Piece();
+		nextPiece = new Piece();
+		board = new Board();
+		timer = new Timer();
+		timerTask = new TetrisTimer(this);
+		timer.scheduleAtFixedRate(timerTask, 1000, 1000);
+		setFocusable(true);
+		this.requestFocusInWindow();
+		this.addKeyListener(this);
+		repaint();
+
+		//return pane;
+	}
+>>>>>>> 553cbb9a2e6b5615db17daa3809a371ede3e064d
 	
 	AnimationTimer timer = new AnimationTimer() {
 		@Override

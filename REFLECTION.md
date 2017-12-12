@@ -5,8 +5,6 @@ for this project. Please keep this document organized using Markdown. If you
 click on this file in your team's GitHub repository website, then you will see
 that the Markdown is transformed into nice looking HTML. 
 
-Here is a sample entry (delete this line; also: feel free to copy/paste/modify):
-
 ## SUN 2017-11-17 @ 11:55 PM EST
 
 1. **DONE:** Downloaded the skeleton code.
@@ -39,3 +37,18 @@ Here is a sample entry (delete this line; also: feel free to copy/paste/modify):
 
 3. **PROB:** No problems!! (yeeeett!)
 
+## TUES 2017-12-05 @ 5:35 PM EST
+
+1. **DONE:**
+- Tetris Game Implementation : Mary
+- Tetris Game Error Fix: Mary and Arianna
+- Creation of Tetris Display : Mary
+
+
+2. **TODO:**
+- Error Fix for Tetris Implementation
+- Further implementation of Checkers
+
+
+3. **PROB:**
+- Momentary misplacement of Tetris and Checkers Classes

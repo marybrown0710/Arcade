@@ -26,18 +26,20 @@ public class Checkers{
     CheckersTile[][] chBoard = new CheckersTile[WIDTH][HEIGHT];
     Group tileGroup = new Group();
     Group pieceGroup = new Group();
+    int redCount, whiteCount;
 
     public Checkers()
     {
 
     }
 
-    StackPane createBoard()
+    Group createBoard()
     {
-	StackPane root = new StackPane();
-	root.setPrefSize(WIDTH * TILE_SIZE,HEIGHT * TILE_SIZE);
+	Group root = new Group();
+	//	root.setPrefSize(WIDTH * TILE_SIZE,HEIGHT * TILE_SIZE);
+	root.prefWidth(WIDTH * TILE_SIZE);
+	root.prefHeight(HEIGHT * TILE_SIZE);
 	root.getChildren().addAll(tileGroup,pieceGroup);
-	Color col = null;
 
 	for (int r = 0; r < HEIGHT; r++)
 	   {
@@ -50,14 +52,12 @@ public class Checkers{
 		    CheckersPiece piece = null;
 		    if (c <= 2 && (r + c) % 2 != 0)
 			{
-			    col = Color.RED;
-			    piece = new CheckersPiece(col,r,c);
+			    piece = makePiece(PieceType.RED,r,c);
 			}
 
 		    if (c >= 5 && (r + c) % 2 != 0)
 			{
-			    col = Color.WHITE;
-			    piece = new CheckersPiece(col,r,c);
+			    piece = makePiece(PieceType.WHITE,r,c);
 			}
 
 		    if (piece != null)
@@ -68,76 +68,147 @@ public class Checkers{
 		}
 	   }
 	return root;
-	   }  
+	   } 
 
-    // CheckersTile[][] getBoard()
+    //    MoveResult tryMove(CheckersPiece piece,int newX,int newY)
     // {
-    // }
+    //	return new MoveResult(MoveType.NONE);
+    //}
 
-    //  boolean moveAvailable(int currX, int currY, int newX, int newY)
+    private int toBoard(double pixel)
+    {
+	return (int)(pixel + TILE_SIZE / 2) / TILE_SIZE;
+    }
+
+   CheckersPiece makePiece(PieceType type, int x, int y) { 
+         CheckersPiece piece = new CheckersPiece(type, x, y); 
+ 
+         piece.setOnMouseReleased(e -> { 
+             int newX = toBoard(piece.getLayoutX()); 
+             int newY = toBoard(piece.getLayoutY()); 
+	     System.out.println(newX);
+	     System.out.println(newY);
+ 
+             MoveResult result; 
+	     int x0 = toBoard(piece.getOldX());
+	     int y0 = toBoard(piece.getOldY());
+ 
+             if (newX < 0 || newY < 0 || newX >= WIDTH || newY >= HEIGHT) { 
+                 result = new MoveResult(MoveType.NONE); 
+		 piece.abortMove();
+             } else { 
+                 	
+	if (chBoard[newX][newY].pieceOn() == true || (newX + newY) % 2 == 0)
+	    {
+		result = new MoveResult(MoveType.NONE);
+		piece.abortMove();
+	    }
+	if (Math.abs(newX - x0) == 1 && newY - y0 == piece.getType().movDir)
+	    {
+		result = new MoveResult(MoveType.NORMAL);
+		piece.move(newX,newY);
+		chBoard[x0][y0].setPiece(null);
+		chBoard[newX][newY].setPiece(piece);
+	    }
+	else if(Math.abs(newX - x0) == 1 && newY - y0 != piece.getType().movDir)
+	    {
+		piece.abortMove();
+	    }
+
+	if (Math.abs(newX - x0) == 2 && newY - y0 == piece.getType().movDir * 2)
+	    {
+		int x1 = x0 + (newX - x0) / 2;
+		int y1 = y0 + (newY - y0) / 2;
+
+		if (chBoard[x1][y1].pieceOn() && chBoard[x1][y1].getChPiece().getType() != piece.getType() && chBoard[newX][newY].pieceOn() == false)
+		    {
+			result = new MoveResult(MoveType.KILL, chBoard[x1][y1].getChPiece());
+			piece.move(newX,newY);
+			chBoard[x0][y0].setPiece(null);
+			chBoard[newX][newY].setPiece(piece);
+
+			CheckersPiece otherP = result.getPiece();
+			pieceGroup.getChildren().remove(otherP);
+		    }
+	    } 
+	else if (Math.abs(newX - x0) == 2 && newY - y0 != piece.getType().movDir * 2)
+	    {
+		piece.abortMove();
+	    }
+	     }//else
+         }); 
+	 //	 redCount = updatePieceCount(PieceType.RED);
+	 // whiteCount = updatePieceCount(PieceType.WHITE);
+	 return piece;
+   }
+
+
+    //   public void PlayGame()
     // {
-    //	if (newX >= 0 && newX <= 7 && newY >= 0 && newY <= 7)
+    //	int player1Turns, player2Turns = 0;
+    //	createBoard();
+    //	System.out.println("Click the space where you want to move")
+    // setOnMouseClicked()( e -> {
+    //int desiredX = toBoard(getX())
+    //int desiredY = toBoard(getY())
+    //});
+    //if clickCount == 1
+    //{
+    //}
+
+    //  public int updatePieceCount(PieceType type)
+    // { 
+    //	for (int i = 0; i < 8; i++)
     //	    {
-    //		if ((newX + newY) % 2 == 0 || chBoard[newX][newY].pieceOn() == true)
+    //		for(int v = 0; v < 8; v++)
     //		    {
-    //			if (pieceToJump(currX,currY) == true)
-    //			    return true;
-    //			else
-    //			    return false;
-    //		    }
-    //		else if(chBoard[currX][currY].pieceOn() == true)
-    //		    {
-    //			if (chBoard[currX][currY].getChPiece().getFill().equals(Color.RED) && newX == (currX + 1) && (newY == currY - 1 || newY == currY + 1))
-    //			    {
-    //				return true;
+    //			if(chBoard[i][v].pieceOn() == true)
+    //			    {if(chBoard[i][v].getChPiece().getType() == type && type == PieceType.RED)
+    //				    {
+    //					redCount++;
+    ///				    }
+    ///				else if (chBoard[i][v].getChPiece().getType() == type && type == PieceType.WHITE)
+    //				    {
+    //					whiteCount++;
+    //				    }
     //			    }
-    //			else if (chBoard[currX][currY].getChPiece().getFill().equals(Color.WHITE) && newX == (currX - 1) && (newY == currY - 1 || newY == currY + 1))
-    ///			    return true;
-    //			else
-    //			    return false;
-    //		    }
+    ///		    }
+    //	    }
+    //	if (type == PieceType.RED)
+    //	    {
+    //		return redCount;
     //	    }
     //	else
-    //	    return false;
+    //	    {
+    //		return whiteCount;
+    //	    }
     //}
 
-    // boolean pieceToJump(int currX, int currY)
-    // {
-    //	if (chBoard[currX][currY].pieceOn() == true)
-    //	    {
-    //		if (chBoard[currX][currY].getChPiece().getFill().equals(Color.RED))
-    //		    {
-    //			if (currX + 2 <= 7 && currY + 2 <= 7 && currY - 2 >= 0)
-    //			    {
-    //				if (chBoard[currX + 1][currY + 1].pieceOn() == true && chBoard[currX + 1][currY + 1].getChPiece().getFill().equals(Color.WHITE) && chBoard[currX + 2][currY + 2].pieceOn() == false)
-    //				    {
-    //					return true;
-    //				    }
-    //				else if (chBoard[currX + 1][currY - 1].pieceOn() == true && chBoard[currX + 1][currY - 1].getChPiece().getFill().equals(Color.WHITE) && chBoard[currX + 2][currY - 2].pieceOn() == false)
-    //				    {
-    //					return true; 
-    //				    }
-    //			    }//if
-    //			else
-    //			    return false;
-    //		    }//if
-    //	if (chBoard[currX][currY].getChPiece().getFill().equals(Color.WHITE))
-    //		    {
-    //			if (currX - 2 >= 0 && currY + 2 <= 7 && currY - 2 >= 0)
-    //			    { 
-    //				if (chBoard[currX + 1][currY + 1].pieceOn() == true && chBoard[currX - 1][currY + 1].getChPiece().getFill().equals(Color.RED) && chBoard[currX - 2][currY + 2].pieceOn() == false)
-    //				    {
-    //					return true;
-    //				    }
-    //				else if (chBoard[currX + 1][currY - 1].pieceOn() == true && chBoard[currX - 1][currY - 1].getChPiece().getFill().equals(Color.RED) && chBoard[currX - 2][currY - 2].pieceOn() == false)
-    //				    {
-    //					return true; 
-    //				    }
-    //			    }//if
-    //		    }//if
-    //	    }//if
-    //	else
-    //	    return false;
-    //}
+    public boolean outOfMoves(PieceType type)
+    {
+	int numPieces = 0;
+	int addFactor = type.movDir;
+	int killAddFactor = type.movDir * 2;
+	for (int i = 0; i < 8; i++)
+	    {for (int v = 0; v < 8; v++)
+		    {if (chBoard[i][v].pieceOn() == true)
+			    {
+				if (chBoard[i][v].getChPiece().getType() == type)
+				    {
+					numPieces++;
+					if ((i + addFactor <= 7) && (i + addFactor >= 0) && (v + addFactor >= 0) && (v + addFactor <= 7) && chBoard[i + addFactor][v + addFactor].pieceOn() == false)
+					    return false;
+					else if ((i + killAddFactor <= 7) && (i + killAddFactor >= 0) && (v + killAddFactor >= 0) && (v + killAddFactor <= 7) && chBoard[i + addFactor][v + addFactor].pieceOn() == true)
+					    return false;
+				    }
+			    }
+		    }
+	    }
+	return true; 
+    }
+
 }
+
+
+
                                 
