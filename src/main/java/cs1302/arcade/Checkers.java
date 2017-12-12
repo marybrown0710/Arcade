@@ -15,6 +15,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class Checkers{
 
@@ -24,15 +27,20 @@ public class Checkers{
 
     //actual array
     CheckersTile[][] chBoard = new CheckersTile[WIDTH][HEIGHT];
-
+    Group chRoot;
     Group tileGroup = new Group();
     Group pieceGroup = new Group();
-    int redCount = 12;
-    int whiteCount = 12;
+    int redCaptured = 0;
+    int whiteCaptured = 0;
 
     public Checkers()
     {
 
+    }
+
+    public Checkers(Group root)
+    {
+	this.chRoot = createBoard();
     }
 
     Group createBoard()
@@ -54,13 +62,13 @@ public class Checkers{
 		    if (c <= 2 && (r + c) % 2 != 0)
 			{
 			    piece = makePiece(PieceType.RED,r,c);
-			    Game(piece);
+			    Game(piece, root);
 			}
 
 		    if (c >= 5 && (r + c) % 2 != 0)
 			{
 			    piece = makePiece(PieceType.WHITE,r,c);
-			    Game(piece);
+			    Game(piece, root);
 			}
 
 		    if (piece != null)
@@ -84,9 +92,27 @@ public class Checkers{
 	 return piece;
    }
 
-    public void Game(CheckersPiece piece)
+    public void Game(CheckersPiece piece, Group g)
     {
+	if (whiteCaptured == 12)
+	    {
+		Text text1 = new Text(25,225,"RED WON!!");
+		text1.setFill(Color.DARKBLUE);
+		text1.setFont(Font.font(java.awt.Font.SERIF, 25));
+		g.getChildren().add(text1);
+	    }
+	else if (redCaptured == 12)
+	    {
+		Text text1 = new Text(25,225,"WHITE WON!!");
+		text1.setFill(Color.DARKBLUE);
+		text1.setFont(Font.font(java.awt.Font.SERIF, 25));
+		g.getChildren().add(text1);
+	    }
+	else
+	    {	
          piece.setOnMouseReleased(e -> { 
+		 if (whiteCaptured < 12 && redCaptured < 12)
+		     {
              int newX = toBoard(piece.getLayoutX()); 
              int newY = toBoard(piece.getLayoutY()); 
 	     System.out.println(newX);
@@ -124,18 +150,19 @@ public class Checkers{
 			 if (chBoard[x1][y1].pieceOn() && chBoard[x1][y1].getChPiece().getType() != piece.getType())
 			     {
 				 result = new MoveResult(MoveType.KILL, chBoard[x1][y1].getChPiece());
-				 piece.move(newX,newY);
 				 chBoard[x0][y0].setPiece(null);
+				 chBoard[x1][y1].setPiece(null);
+				 piece.move(newX,newY);	
 				 chBoard[newX][newY].setPiece(piece);
 				 CheckersPiece otherP = result.getPiece();
 				 pieceGroup.getChildren().remove(otherP);
 				 if (otherP.getType() == PieceType.RED)
 				     {
-					 redCount--;
+					 redCaptured++;
 				     }
 				 else
 				     {
-					 whiteCount--;
+					 whiteCaptured++;
 				     }
 			     }
 			 else
@@ -144,44 +171,20 @@ public class Checkers{
 			     }
 		     } //elseif
 		 }//else
-	     System.out.println("RED PLAYER SCORE: " + (12 - whiteCount));
-	     System.out.println("WHITE PLAYER SCORE: " + (12 - redCount));
-	     if (12 - whiteCount == 0)
+	     System.out.println("RED PLAYER SCORE: " + whiteCaptured);
+	     System.out.println("WHITE PLAYER SCORE: " + redCaptured);
+	     if (12 - whiteCaptured == 0)
 		 {
 		     System.out.println("Game Over. RED Wins!!");
 		 }
-	     else if (12 - redCount == 0)
+	     else if (12 - redCaptured == 0)
 		 {
 		     System.out.println("Game Over. WHITE Wins!!");
 		 }
+		     }//if
 	     });
+	    }//else
     }//Game
-
-    //   public void PlayGame()
-    // {
-    //	int player1Turns, player2Turns = 0;
-    //	createBoard();
-    //	System.out.println("Click the space where you want to move")
-    // setOnMouseClicked()( e -> {
-    // int desiredX = toBoard(getX())
-    // int desiredY = toBoard(getY())
-    //});
-    //if clickCount == 1
-    //{
-    //}
-
-    //  public int updatePieceCount(PieceType type)
-    // { 
-    //	
-    //	if (type == PieceType.RED)
-    //	    {
-    //		return redCount;
-    //	    }
-    //	else
-    //	    {
-    //		return whiteCount;
-    //	    }
-    //}
 
     public boolean outOfMoves(PieceType type)
     {
@@ -194,7 +197,6 @@ public class Checkers{
 			    {
 				if (chBoard[i][v].getChPiece().getType() == type)
 				    {
-					numPieces++;
 					if ((i + addFactor <= 7) && (i + addFactor >= 0) && (v + addFactor >= 0) && (v + addFactor <= 7) && chBoard[i + addFactor][v + addFactor].pieceOn() == false)
 					    return false;
 					else if ((i + killAddFactor <= 7) && (i + killAddFactor >= 0) && (v + killAddFactor >= 0) && (v + killAddFactor <= 7) && chBoard[i + addFactor][v + addFactor].pieceOn() == true)
