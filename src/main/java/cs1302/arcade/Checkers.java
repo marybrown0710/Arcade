@@ -78,6 +78,8 @@ public class Checkers{
 			}
 		}
 	   }
+
+	//CheckersPiece p = chBoard
 	return root;
     } 
 
