@@ -46,8 +46,7 @@ public class ArcadeApp extends Application {
     Menu gameHelp = new Menu("Help");
     Checkers ch = new Checkers();
     // Pane pane1 = new Pane();
-    Group chG = ch.createBoard();
-    StackPane sPane = new StackPane();
+    // Group chG = ch.createBoard();
 
     VBox vBox3 = new VBox();
     Tetris tet = new Tetris();
@@ -69,7 +68,6 @@ public class ArcadeApp extends Application {
 	menubar2.getMenus().addAll(gameFile,gameHelp);
 	gameFile.getItems().add(exitGame);
 	menubar2.prefWidthProperty().bind(vBox2.widthProperty());
-	vBox2.getChildren().addAll(menubar2,chG);
     
 	Image bg2 = new Image("https://s3-us-west-2.amazonaws.com/s.cdpn.io/476907/upsidedown.png");
 	Image bg1 = new Image("https://newevolutiondesigns.com/images/freebies/retro-wallpaper-50.jpg");
@@ -83,7 +81,17 @@ public class ArcadeApp extends Application {
 	
 	//opens checker game
 	checkers.setOnAction(actionEvent -> {
-	 	sPane.getChildren().clear();
+	 	StackPane sPane = new StackPane();
+		Group newB = ch.createBoard();
+		CheckersTile[][] chTile = ch.getChBoardArray();
+
+		//	for (int i = 0; i < 8; i++)
+		//  { for (int v = 0; v < 8; v++)
+		//	    {
+		//		if (chBoard[i][v]
+		//		chBoard[i][v].getPiece()
+		vBox2.getChildren().clear();
+		vBox2.getChildren().addAll(menubar2,newB);
 	 	sPane.getChildren().addAll(vBox,vBox2);
 	 	stage.setScene(new Scene(sPane,1000,650));
   });
@@ -97,10 +105,9 @@ public class ArcadeApp extends Application {
 
 	//exits game without exiting application 
 	exitGame.setOnAction(actionEvent -> {
-		//	VBox v1 = new VBox();
-		vBox.getChildren().clear();
-		vBox.getChildren().addAll(menubar,iv);
-		stage.setScene(scene);
+		VBox v1 = new VBox();
+		v1.getChildren().addAll(menubar,iv);
+		stage.setScene(new Scene(v1,1000,650));
 	    });
 
 	//changes background when pressed
@@ -113,12 +120,9 @@ public class ArcadeApp extends Application {
 		    {
 			iv.setImage(bg1);
 		    }
-
-       	menubar.getMenus().clear();
-	menubar.getMenus().addAll(fileMenu,optionMenu,helpMenu);
-       	vBox.getChildren().clear();		
-	vBox.getChildren().addAll(menubar,iv);
-       	stage.setScene(scene);
+		VBox v1 = new VBox();       		
+		v1.getChildren().addAll(menubar,iv);
+		stage.setScene(new Scene(v1,1000,650));
 	    });
 
 	//exits application

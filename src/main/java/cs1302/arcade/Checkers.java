@@ -43,6 +43,11 @@ public class Checkers{
 	this.chRoot = createBoard();
     }
 
+    CheckersTile[][] getChBoardArray()
+    {
+	return chBoard;
+    }
+
     Group createBoard()
     {
 	Group root = new Group();
@@ -62,13 +67,13 @@ public class Checkers{
 		    if (c <= 2 && (r + c) % 2 != 0)
 			{
 			    piece = makePiece(PieceType.RED,r,c);
-			    Game(piece, root);
+			    GameRed(piece, root);
 			}
 
 		    if (c >= 5 && (r + c) % 2 != 0)
 			{
 			    piece = makePiece(PieceType.WHITE,r,c);
-			    Game(piece, root);
+			    GameWhite(piece, root);
 			}
 
 		    if (piece != null)
@@ -94,7 +99,7 @@ public class Checkers{
 	 return piece;
    }
 
-    public void Game(CheckersPiece piece, Group g)
+    public int GameWhite(CheckersPiece piece, Group g)
     {
 	if (whiteCaptured == 12)
 	    {
@@ -186,6 +191,102 @@ public class Checkers{
 		     }//if
 	     });
 	    }//else
+	return redCaptured;
+    }//Game
+
+ public int GameRed(CheckersPiece piece, Group g)
+    {
+	if (whiteCaptured == 12)
+	    {
+		Text text1 = new Text(25,225,"RED WON!!");
+		text1.setFill(Color.DARKBLUE);
+		text1.setFont(Font.font(java.awt.Font.SERIF, 25));
+		g.getChildren().add(text1);
+	    }
+	else if (redCaptured == 12)
+	    {
+		Text text1 = new Text(25,225,"WHITE WON!!");
+		text1.setFill(Color.DARKBLUE);
+		text1.setFont(Font.font(java.awt.Font.SERIF, 25));
+		g.getChildren().add(text1);
+	    }
+	else
+	    {	
+         piece.setOnMouseReleased(e -> { 
+		 if (whiteCaptured < 12 && redCaptured < 12)
+		     {
+             int newX = toBoard(piece.getLayoutX()); 
+             int newY = toBoard(piece.getLayoutY()); 
+	     System.out.println(newX);
+	     System.out.println(newY);
+ 
+             MoveResult result; 
+	     int x0 = toBoard(piece.getOldX());
+	     int y0 = toBoard(piece.getOldY());
+ 
+             if (newX < 0 || newY < 0 || newX >= WIDTH || newY >= HEIGHT || chBoard[newX][newY].pieceOn() == true || (newX + newY) % 2 == 0) { 
+                 result = new MoveResult(MoveType.NONE); 
+		 piece.abortMove();
+             } 
+	     else 
+		 {                  	
+		     if(Math.abs(newX - x0) == 1 && newY - y0 == piece.getType().movDir)
+		     {
+			 result = new MoveResult(MoveType.NORMAL);
+			 piece.move(newX,newY);
+			 chBoard[x0][y0].setPiece(null);
+			 chBoard[newX][newY].setPiece(piece);
+		     }
+		     else if(Math.abs(newX - x0) == 1 && newY - y0 != piece.getType().movDir)
+		     {
+			 piece.abortMove();
+		     }
+		     else if(Math.abs(newX - x0) == 2 && newY - y0 != piece.getType().movDir * 2)
+		     {
+			 piece.abortMove();
+		     }
+		     else if(Math.abs(newX - x0) == 2 && newY - y0 == piece.getType().movDir * 2)
+		     {
+			 int x1 = x0 + (newX - x0) / 2;
+			 int y1 = y0 + (newY - y0) / 2;
+			 if (chBoard[x1][y1].pieceOn() && chBoard[x1][y1].getChPiece().getType() != piece.getType())
+			     {
+				 result = new MoveResult(MoveType.KILL, chBoard[x1][y1].getChPiece());
+				 chBoard[x0][y0].setPiece(null);
+				 chBoard[x1][y1].setPiece(null);
+				 piece.move(newX,newY);	
+				 chBoard[newX][newY].setPiece(piece);
+				 CheckersPiece otherP = result.getPiece();
+				 pieceGroup.getChildren().remove(otherP);
+				 if (otherP.getType() == PieceType.RED)
+				     {
+					 redCaptured++;
+				     }
+				 else
+				     {
+					 whiteCaptured++;
+				     }
+			     }
+			 else
+			     {
+				 piece.abortMove();
+			     }
+		     } //elseif
+		 }//else
+	     System.out.println("RED PLAYER SCORE: " + whiteCaptured);
+	     System.out.println("WHITE PLAYER SCORE: " + redCaptured);
+	     if (12 - whiteCaptured == 0)
+		 {
+		     System.out.println("Game Over. RED Wins!!");
+		 }
+	     else if (12 - redCaptured == 0)
+		 {
+		     System.out.println("Game Over. WHITE Wins!!");
+		 }
+		     }//if
+	     });
+	    }//else
+	return whiteCaptured;
     }//Game
 
     public boolean outOfMoves(PieceType type)
