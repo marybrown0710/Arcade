@@ -1,30 +1,28 @@
 package cs1302.arcade;
 
-//import java.applet.Applet;
-//import java.awt.Color;
-//import java.awt.Font;
-//import java.awt.Graphics;
-//import java.awt.Graphics2D;
-//import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-//import java.util.Timer;
 import javafx.scene.layout.*;
-import java.util.Timer;
-<<<<<<< HEAD
+import javafx.util.*;
 import javafx.scene.*;
 import javafx.scene.text.*;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.*;
-import javafx.application.Application;
+import javafx.application.*;
 import javafx.stage.Stage;
 import javafx.scene.input.*;
 import javafx.scene.Group;
 import javafx.event.EventHandler;
 import javafx.animation.*;
+import javafx.scene.control.*;
+import javafx.event.*;
+import javafx.animation.*;
 
+/**
+ * Handles all the actions and operations of Tetris game. I AM FINISHED!!
+ *
+ *@author Mary Brown
+ */
 
-
-public class Tetris extends Group {
+public class Tetris extends Application {
 
     private static final int HEIGHT = 680, WIDTH = 640, BLOCK_SIZE = 32;
     private static final int X_OFFSET = 20, Y_OFFSET = 20, NEXTPIECEX = 360, NEXTPIECEY = 40;
@@ -35,198 +33,127 @@ public class Tetris extends Group {
     private static double score;
     private static int lines;
     private final static Color[] colors = {Color.WHITE, Color.ORANGE, Color.GREEN, Color.CYAN, Color.MAGENTA, Color.BLUE, Color.YELLOW, Color.RED};
-    private static TetrisTimer timerTask;
-    private static Timer timer;
     private static boolean gameOver = false;
-    private Group root = new Group(); 
-    //private GraphicsContext g;
-    private Canvas canvi = new Canvas(WIDTH*BLOCK_SIZE, HEIGHT*BLOCK_SIZE);
+    private Group root = new Group();
+    private Canvas canvi = new Canvas();
     private StackPane pane = new StackPane();
     private Scene theScene;
+    private Stage theStage;
+    Timeline timeline;
     
-    private KeyEvent k;
-  
+    Canvas canvas = new Canvas(WIDTH, HEIGHT);
+    GraphicsContext gc = canvas.getGraphicsContext2D();
+    
     /**
      * Creates a new Tetris game with pieces and board.
      */
     public Tetris() {
-	
-    	currentPiece = new Piece();
-    	nextPiece = new Piece();
-    	board = new Board();
-    	//timer = new Timer();
-    	//timerTask = new TetrisTimer(this);
-    	//timer.scheduleAtFixedRate(timerTask, 1000, 1000);
-
-    // 	//setFocusable(true);
-    // 	//this.requestFocusInWindow();
-    // 	//this.addKeyListener(this);
-    // 	//repaint();
-	
-    // 	//return pane;
+	 currentPiece = new Piece();
+	 nextPiece = new Piece();
+	 board = new Board();
     }// Tetris
-
+    
+    /**
+     * Restarts the game
+     */
+    public void restart() {
+	 currentPiece = new Piece();
+	 nextPiece = new Piece();
+	 board = new Board();
+	 root.getChildren().clear();
+	 paint(gc);
+	 root.getChildren().add(canvas);
+    }// restart
+	
     /**
      * Handles majority of the Tetris operations.
      *
      * @param primaryStage  the Stage that the Tetris scene will be on.
      */
+    @Override
     public void start(Stage primaryStage) {
-
-    	root = createContent();
+	theStage = primaryStage;
+	theStage.setTitle("Tetris");
+    	
+	paint(gc);
 	
-	//scene.setOnKeyPressed(e -> keyReleased(e));
-	theScene = new Scene(root, WIDTH*BLOCK_SIZE, HEIGHT*BLOCK_SIZE, Color.WHITE);
-	//set BorderPane
-	//BorderPane tPane = new BorderPane();
-	//tPane.prefHeightProperty().bind(theScene.heightProperty());
-	//tPane.prefWidthProperty().bind(theScene.widthProperty());
+	root.getChildren().add(canvas);
 
-	//borderPane.setTop(menuBar);
-	//root.getChildren().add(tPane);
+	Scene sc = new Scene(root);
 
-	theScene.setOnKeyReleased(   //??
-				  new EventHandler<KeyEvent>()
-				  {
-				      @Override
-					  public void handle(KeyEvent e){
-					  
-					  if (e.getCode() == KeyCode.UP){
-					      if(board.canMove(currentPiece, 0, -1)) currentPiece.rotate();
-					  } else if (e.getCode() == KeyCode.DOWN){
-					      if(board.canMove(currentPiece, 0, 1)) {
-						  currentPiece.moveDown();
-						  score += 10 + level;
-					      }else updateBoard();
-					  } else if (e.getCode() == KeyCode.LEFT){
-					      if(board.canMove(currentPiece, -1, 0)) currentPiece.moveLeft();
-					  } else if (e.getCode() == KeyCode.RIGHT){
-					      if(board.canMove(currentPiece, 1, 0)) currentPiece.moveRight();
-					  } else if (e.getCode() == KeyCode.SPACE){
-					      while(board.canMove(currentPiece, 0, 1)) {
-						  currentPiece.moveDown();
-						  score += 10 + level;
-					      }
-					      updateBoard();
-					  }
-				   
-				      }
-				  });
-=======
-import javafx.scene.layout.StackPane;
-
-public class Tetris extends Applet implements KeyListener{
-
-	private static final int HEIGHT = 680, WIDTH = 640, BLOCK_SIZE = 32;
-	private static final int X_OFFSET = 20, Y_OFFSET = 20, NEXTPIECEX = 360, NEXTPIECEY = 40;
-	private static Piece currentPiece, nextPiece;
-	private static Board board;
-	private static int level = 1;
-	private static double score;
-	private static int lines;
-	private final static Color[] colors = {Color.WHITE, Color.ORANGE, Color.GREEN, Color.CYAN, Color.MAGENTA, Color.BLUE, Color.YELLOW, Color.RED};
-	private static TetrisTimer timerTask;
-	private static Timer timer;
-	private static boolean gameOver = false;
+	theStage.setScene(sc);
+	theStage.sizeToScene();
+	theStage.show();
 	
-
-    // @Override
-    //	public StackPane init() {
-    //	    StackPane pane = new StackPane();
-    //	}
-
-	@Override
-	public void init() {
+	sc.setOnKeyReleased(
+			    new EventHandler<KeyEvent>()
+			    {
+				@Override
+				    public void handle(KeyEvent e){
+				    KeyCode daKey = e.getCode();
+				    switch(daKey){
+				    case UP:
+					if(board.canMove(currentPiece, 0, -1)) currentPiece.rotate();
+					break;
+				    case DOWN:
+					if(board.canMove(currentPiece, 0, 1)) {
+					    currentPiece.moveDown();
+					    score += 10 + level;
+					}else updateBoard();
+					break;
+				    case LEFT: 
+					if(board.canMove(currentPiece, -1, 0)) currentPiece.moveLeft();
+					break;
+				    case RIGHT:
+					if(board.canMove(currentPiece, 1, 0)) currentPiece.moveRight();
+					break;
+				    case SPACE:
+					while(board.canMove(currentPiece, 0, 1)) {
+					    currentPiece.moveDown();
+					    score += 10 + level;
+					}
+					updateBoard();
+					break;
+				    }
+				    drawBoard(gc);
+				    drawPiece(gc);
+				    drawNextPiece(gc);
+				    if(gameOver) {
+					timeline.pause();
+					gc.setFill(Color.GRAY);
+					gc.fillRect(X_OFFSET + 2*BLOCK_SIZE, Y_OFFSET + 8*BLOCK_SIZE, 6*BLOCK_SIZE, 4*BLOCK_SIZE);
+					gc.setFill(Color.WHITE);
+					gc.fillText("GAME OVER.", X_OFFSET + 3*BLOCK_SIZE, Y_OFFSET + 10*BLOCK_SIZE - 10);
+					gc.fillText("Score: "+(int)score, X_OFFSET + 3*BLOCK_SIZE, Y_OFFSET + 11*BLOCK_SIZE - 10);
+					
+					//System.exit(0);
+				    }					  
+				}
+			    });
 	
-
-		setSize(WIDTH, HEIGHT);
-		currentPiece = new Piece();
-		nextPiece = new Piece();
-		board = new Board();
-		timer = new Timer();
-		timerTask = new TetrisTimer(this);
-		timer.scheduleAtFixedRate(timerTask, 1000, 1000);
-		setFocusable(true);
-		this.requestFocusInWindow();
-		this.addKeyListener(this);
-		repaint();
-
-		//return pane;
-	}
->>>>>>> 553cbb9a2e6b5615db17daa3809a371ede3e064d
-	
-	AnimationTimer timer = new AnimationTimer() {
-		@Override
-		    public void handle(long now) {
-		    update();
-		}
-	    };
-	timer.start();
+	EventHandler<ActionEvent> handler = event -> update();
+	timeline = new Timeline(new KeyFrame(
+					     Duration.millis(2500),
+					     handler));
+	timeline.setCycleCount(Timeline.INDEFINITE);
+	timeline.play();
+	theStage.show();
     }// start
-
-    /**
-     * Gets the current scene.
-     *
-     * @return the current scene
-     */
-    public Scene getTheScene() {
-	return theScene;
-    }
-
-    /**
-     * Gets the root node of the game.
-     *
-     * @return the root of the game
-     */
-    public Group getRoot() {
-	return root;
-    }
-	
-	//scene.setOnKeyPressed(e -> keyReleased(e));
-	
-	
-	//primaryStage.setScene(scene);
-	//primaryStage.show();
-    //}// start
-
-    // public static void main(String[] args) {
-    // 	try {
-    // 	    Application.launch(args);
-    // 	} catch (UnsupportedOperationException e) {
-    // 	    System.out.println(e);
-    // 	    System.err.println("If this is a DISPLAY problem, then your X server connection");
-    // 	    System.err.println("has likely timed out. This can generally be fixed by logging");
-    // 	    System.err.println("out and logging back in.");
-    // 	    System.exit(1);
-    // 	} // try
-    // }// main
-
+    
+    
     /**
      * Creates the board for the user
      */
     public Group createContent() {
 
-	//Group root = new Group(); 
-	//timerTask = new TetrisTimer(this);
-	//timer.scheduleAtFixedRate(timerTask, 1000, 1000);
-	
-	//pane.setPrefSize(WIDTH*BLOCK_SIZE, HEIGHT*BLOCK_SIZE);
+	Group root = new Group(); 
+	canvi = new Canvas(WIDTH*BLOCK_SIZE, HEIGHT*BLOCK_SIZE);
 	GraphicsContext g = canvi.getGraphicsContext2D();
-	paint(g);
-	//pane.getChildren().addAll(canvi);
-	//root.getChildren().add(canvi);
-	
-	
-	//pane.getChildren().addAll(canvi);
+	root.prefWidth(WIDTH*BLOCK_SIZE);
+	root.prefHeight(HEIGHT*BLOCK_SIZE);
 	root.getChildren().add(canvi);
-	
-	//theScene = new Scene(root);
-	//timerTask.run();
-	
-	//pane.getChildren().add(canvi);
 
-	return root; //??
-	//return canvi; 
+	return root; 
     }// createContent
 
     /**
@@ -237,42 +164,27 @@ public class Tetris extends Applet implements KeyListener{
     //@Override
     public void paint(GraphicsContext g2d) {
 	    
-	    
-	    //Graphics2D g2d = (Graphics2D)g;   //??!!??
-	    g2d.setFont(new Font("Comic Sans MS", 20));
+	g2d.setFont(new Font("Comic Sans MS", 20));
+	g2d.setFill(Color.GRAY);
+	g2d.fillRect(0, 0, WIDTH, HEIGHT);
+	g2d.setFill(Color.WHITE);
+	g2d.fillText("Next Piece:", NEXTPIECEX, NEXTPIECEY-10);
+	g2d.fillText("Score: "+(int)score, NEXTPIECEX, 390);
+	g2d.fillText("Lines: "+lines, NEXTPIECEX, 430);
+	g2d.fillText("Level: "+level, NEXTPIECEX, 470);
+	drawBoard(g2d);
+	drawPiece(g2d);
+	drawNextPiece(g2d);
+	System.out.println("painted!");
+	if(gameOver) {
+	    timeline.pause();
 	    g2d.setFill(Color.GRAY);
-	    g2d.fillRect(0, 0, WIDTH, HEIGHT);
+	    g2d.fillRect(X_OFFSET + 2*BLOCK_SIZE, Y_OFFSET + 8*BLOCK_SIZE, 6*BLOCK_SIZE, 4*BLOCK_SIZE);
 	    g2d.setFill(Color.WHITE);
-	    g2d.fillText("Next Piece:", NEXTPIECEX, NEXTPIECEY-10);
-	    //Text t1 = new Text((double)NEXTPIECEX, (double)NEXTPIECEY-10, "Next Piece:");
-	    g2d.fillText("Score: "+(int)score, NEXTPIECEX, 390);
-	    //Text t2 = new Text((double)NEXTPIECEX, 390.0, "Score: "+(int)score);
-	    g2d.fillText("Lines: "+lines, NEXTPIECEX, 430);
-	    //Text t3 = new Text((double)NEXTPIECEX, 470, "Lines: "+lines);
-	    g2d.fillText("Level: "+level, NEXTPIECEX, 470);
-	    //Text t4 = new Text((double)NEXTPIECEX, 470, "Level: "+level);
-	    // g2d.drawString("Game developed by:", NEXTPIECEX, 550);
-	    // g2d.drawString("Chinmay Pednekar", NEXTPIECEX+64, 590);
-	    // g2d.drawString("ChiP™", NEXTPIECEX+64, 630);
-	    drawBoard(g2d);
-	    drawPiece(g2d);
-	    drawNextPiece(g2d);
-	    System.out.println("painted!");
-	    if(gameOver) {
-		timerTask.cancel();
-		g2d.setFill(Color.GRAY);
-		g2d.fillRect(X_OFFSET + 2*BLOCK_SIZE, Y_OFFSET + 8*BLOCK_SIZE, 6*BLOCK_SIZE, 4*BLOCK_SIZE);
-		g2d.setFill(Color.WHITE);
-		g2d.fillText("GAME OVER", X_OFFSET + 3*BLOCK_SIZE, Y_OFFSET + 10*BLOCK_SIZE - 10);
-		//Text t5 = new Text(X_OFFSET + 3*BLOCK_SIZE, Y_OFFSET + 10*BLOCK_SIZE - 10, "GAME OVER");
-		g2d.fillText("Score: "+(int)score, X_OFFSET + 3*BLOCK_SIZE, Y_OFFSET + 11*BLOCK_SIZE - 10);
-		//Text t6 = new Text(X_OFFSET + 3*BLOCK_SIZE, Y_OFFSET + 11*BLOCK_SIZE - 10, "Score: "+(int)score); 
-		//this.removeKeyListener(this.getKeyListeners()[0]);
-		//pane.getChildren().addAll(t5, t6);
-	    }
-	    //pane.getChildren().add(canvi);
-	    //pane.getChildren().addAll(t1, t2, t3, t4);
-	}// paint
+	    g2d.fillText("GAME OVER", X_OFFSET + 3*BLOCK_SIZE, Y_OFFSET + 10*BLOCK_SIZE - 10);
+	    g2d.fillText("Score: "+(int)score, X_OFFSET + 3*BLOCK_SIZE, Y_OFFSET + 11*BLOCK_SIZE - 10);
+	}
+    }// paint
     
     /**
      * Drwas the piece in the Tetris grid.
@@ -322,52 +234,23 @@ public class Tetris extends Applet implements KeyListener{
 	    }
     }// drawBoard
     
-        
-    // public void keyReleased(Scene scene) {
-    // 	scene.setOnKeyReleased(   //??
-    // 			   new EventHandler<KeyEvent>()
-    // 			   {
-    // 			       @Override
-    // 			       public void handle(KeyEvent e){
-				   
-    // 				   //KeyCode userKey = e.getCode();
-				   
-    // 				   //switch(userKey) {
-    // 				   if (e.getCode() == KeyCode.UP){
-    // 				       if(board.canMove(currentPiece, 0, -1)) currentPiece.rotate();
-    // 				   } else if (e.getCode() == KeyCode.DOWN){
-    // 				       if(board.canMove(currentPiece, 0, 1)) {
-    // 					   currentPiece.moveDown();
-    // 					   score += 10 + level;
-    // 				       }else updateBoard();
-    // 				   } else if (e.getCode() == KeyCode.LEFT){
-    // 				       if(board.canMove(currentPiece, -1, 0)) currentPiece.moveLeft();
-    // 				   } else if (e.getCode() == KeyCode.RIGHT){
-    // 				       if(board.canMove(currentPiece, 1, 0)) currentPiece.moveRight();
-    // 				   } else if (e.getCode() == KeyCode.SPACE){
-    // 				       while(board.canMove(currentPiece, 0, 1)) {
-    // 					   currentPiece.moveDown();
-    // 					   score += 10 + level;
-    // 				       }
-    // 				       updateBoard();
-    // 				   }
-				   
-    // 			       }
-    // 			   });
-    // }
-    
-    
-   
+    /**
+     * Moves piece and updates board.
+     */
     public void update() {
-	if(board.canMove(currentPiece, 0, 1))
+	if(board.canMove(currentPiece, 0, 1)){
 	    currentPiece.moveDown();
+	    drawBoard(gc);
+	    drawPiece(gc);
+	}
 	else {
 	    updateBoard();
 	}
-	//repaint();
-    }
+    }// update
     
-   
+    /**
+     * Updates the board 
+     */
     private void updateBoard() {
 	board.store(currentPiece);
 	currentPiece = nextPiece;
@@ -379,10 +262,10 @@ public class Tetris extends Applet implements KeyListener{
 	if(!board.canMove(currentPiece, 0, 1)) {
 	    gameOver = true;
 	}
-	//pane.getChildren().add(board);
-    }
+    }// updateBoard
     
-       
+    public static void main(String[] args) {
+	Application.launch(args);
+    }// main
     
-
-}// TetrisTimer
+}// Tetris

@@ -44,16 +44,16 @@ public class ArcadeApp extends Application {
     MenuItem tetris = new MenuItem("Tetris");
     Menu gameFile = new Menu("File");
     Menu gameHelp = new Menu("Help");
-    Checkers ch = new Checkers();
-    Pane pane1 = new Pane();
-    Group chG = ch.createBoard();
-    StackPane sPane = new StackPane();
+    // Checkers ch = new Checkers();
+    // Pane pane1 = new Pane();
+    // Group chG = ch.createBoard();
+    // StackPane sPane = new StackPane();
 
     VBox vBox3 = new VBox();
-    //Tetris tet = new Tetris();
+    Tetris tet = new Tetris();
     //Graphics g = new Graphics();  //???
     //Pane pane3 = tet.createContent();  // ???
-    Tetris tet = new Tetris();
+    //Tetris tet = new Tetris();
     // Graphics g = new Graphics();  //???
     // Pane pane3 = tet.init();  //
     StackPane tPane = new StackPane();
@@ -74,7 +74,7 @@ public class ArcadeApp extends Application {
 	menubar2.getMenus().addAll(gameFile,gameHelp);
 	gameFile.getItems().add(exitGame);
 	menubar2.prefWidthProperty().bind(vBox2.widthProperty());
-	vBox2.getChildren().addAll(menubar2,chG);
+	//vBox2.getChildren().addAll(menubar2,chG);
 	//	vBox3.getChildren().addAll(menubar2,pane3);
 
 	//Group group = new Group();           // main container
@@ -107,51 +107,54 @@ public class ArcadeApp extends Application {
 	vBox.getChildren().addAll(menubar,iv);
 	Scene scene = new Scene(vBox,1000,650);
 	
-	//opens checker game
-	checkers.setOnAction(actionEvent -> {
-		sPane.getChildren().clear();
-		sPane.getChildren().addAll(vBox,vBox2);
-		stage.setScene(new Scene(sPane,1000,650));
-        });
+	// //opens checker game
+	// checkers.setOnAction(actionEvent -> {
+	// 	sPane.getChildren().clear();
+	// 	sPane.getChildren().addAll(vBox,vBox2);
+	// 	stage.setScene(new Scene(sPane,1000,650));
+        // });
 
 	//opens tetris game
 	
 
 	tetris.setOnAction(actionEvent -> {
-		Thread t = new Thread(() -> {
-			Stage tetStage = new Stage();
+		//Thread t = new Thread(() -> {
+		
+		//Stage tetStage = new Stage;
+		tet.start(new Stage());
+		//Stage tetStage = tet.getTheStage();	
+		//tetStage.initModality(Modality.APPLICATION_MODAL);
+		//tetStage.showAndWait();
 			
-			tetStage.initModality(Modality.APPLICATION_MODAL);
 			
-			Tetris tet = new Tetris();
-			tet.start(tetStage);
+			
 			//Make Scene from root
-			Group root = tet.getRoot();
+			//Group root = tet.getRoot();
 			
-			Scene tetScene = tet.getTheScene();
+			//Scene tetScene = tet.getTheScene();
 			//tet.keyReleased(tetScene);
 			//TODO: CALL IN SCENE
 			
-			BorderPane tPane = new BorderPane();
-			tPane.prefHeightProperty().bind(tetScene.heightProperty());
-			tPane.prefWidthProperty().bind(tetScene.widthProperty());
+			// BorderPane tPane = new BorderPane();
+			// tPane.prefHeightProperty().bind(tetScene.heightProperty());
+			// tPane.prefWidthProperty().bind(tetScene.widthProperty());
 
-			Platform.runLater(() -> {
-				tPane.setTop(vBox);
-				root.getChildren().add(tPane);
-			    });
+			// Platform.runLater(() -> {
+			// 	tPane.setTop(vBox);
+			// 	root.getChildren().add(tPane);
+			//     });
+			//tetStage.setScene(new Scene(root));
+		//tetStage.setTitle("Tetris");
 			
-			tetStage.setTitle("Tetris!");
-			
-			tetStage.sizeToScene();
-			tetStage.show();
+		//tetStage.sizeToScene();
+		//tetStage.show();
 			//Show new stage with root.
 			//tet.start(new Stage());
 			System.out.println("it worked!");
 		    });
-	      t.setDaemon(true);
-	      t.start();
-	    });
+	//t.setDaemon(true);
+	// t.start();
+	// });
 	//	tetris.setOnAction(actionEvent -> {
 		
 	//	tPane.getChildren().addAll(vBox,vBox3);

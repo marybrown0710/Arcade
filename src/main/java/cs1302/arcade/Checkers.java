@@ -70,10 +70,10 @@ public class Checkers{
 	return root;
 	   } 
 
-    //    MoveResult tryMove(CheckersPiece piece,int newX,int newY)
+    // MoveResult tryMove(CheckersPiece piece,int newX,int newY)
     // {
-    //	return new MoveResult(MoveType.NONE);
-    //}
+    // 	return new MoveResult(MoveType.NONE);
+    // }
 
     private int toBoard(double pixel)
     {
