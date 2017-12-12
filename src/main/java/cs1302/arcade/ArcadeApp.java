@@ -18,6 +18,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
+import java.awt.Graphics;
+import java.lang.*;
+import javafx.stage.*;
 import java.awt.Graphics;
 
 public class ArcadeApp extends Application {
@@ -40,15 +44,18 @@ public class ArcadeApp extends Application {
     MenuItem tetris = new MenuItem("Tetris");
     Menu gameFile = new Menu("File");
     Menu gameHelp = new Menu("Help");
-    Checkers ch = new Checkers();
-    Pane pane1 = new Pane();
+    // Checkers ch = new Checkers();
+    // Pane pane1 = new Pane();
     Group chG = ch.createBoard();
     StackPane sPane = new StackPane();
 
     VBox vBox3 = new VBox();
     Tetris tet = new Tetris();
+    //Graphics g = new Graphics();  //???
+    //Pane pane3 = tet.createContent();  // ???
+    //Tetris tet = new Tetris();
     // Graphics g = new Graphics();  //???
-    // Pane pane3 = tet.init();  // ???
+    // Pane pane3 = tet.init();  //
     StackPane tPane = new StackPane();
 
     @Override
@@ -68,12 +75,24 @@ public class ArcadeApp extends Application {
 	gameFile.getItems().add(exitGame);
 	menubar2.prefWidthProperty().bind(vBox2.widthProperty());
 	vBox2.getChildren().addAll(menubar2,chG);
-	//	vBox3.getChildren().addAll(menubar2,pane3);
+	vBox3.getChildren().addAll(menubar2,pane3);
+
 
 	//		Group group = new Group();           // main container
 	//	Rectangle r = new Rectangle(20, 20); // some rectangle
 	//	r.setX(50);                          // 50px in the x direction (right)
 	//	r.setY(50);                          // 50ps in the y direction (down)
+
+	//Group group = new Group();           // main container
+	//	Rectangle r = new Rectangle(20, 20); // some rectangle
+	//	r.setX(50);                          // 50px in the x direction (right)
+	//	r.setY(50);                          // 50ps in the y direction (down)
+      	//group.getChildren().add(vBox);          // add to main container
+	//	Group group = new Group();           // main container
+	//	Rectangle r = new Rectangle(20, 20); // some rectangle
+	//	r.setX(50);                          // 50px in the x direction (right)
+	    //		r.setY(50);                          // 50ps in the y direction (down)
+
 		//   group.getChildren().add(vBox);          // add to main container
 
 
@@ -97,18 +116,58 @@ public class ArcadeApp extends Application {
 	
 	//opens checker game
 	checkers.setOnAction(actionEvent -> {
-		sPane.getChildren().clear();
-		sPane.getChildren().addAll(vBox,vBox2);
-		stage.setScene(new Scene(sPane,1000,650));
-        });
+	 	sPane.getChildren().clear();
+	 	sPane.getChildren().addAll(vBox,vBox2);
+	 	stage.setScene(new Scene(sPane,1000,650));
+         });
 
-	// opens tetris game
+	//opens tetris game
 	
-	//	tetris.setOnAction(actionEvent -> {
+
+	tetris.setOnAction(actionEvent -> {
+		Thread t = new Thread(() -> {
 		
-	//	tPane.getChildren().addAll(vBox,vBox3);
-	//	stage.setScene(new Scene(tPane, 1000, 650));
-	//   });
+		Stage tetStage = new Stage;
+		tet.start(new Stage());
+		Stage tetStage = tet.getTheStage();	
+		tetStage.initModality(Modality.APPLICATION_MODAL);
+		tetStage.showAndWait();
+			
+			
+			
+			//Make Scene from root
+			Group root = tet.getRoot();
+			
+			Scene tetScene = tet.getTheScene();
+			tet.keyReleased(tetScene);
+			//TODO: CALL IN SCENE
+			
+			 BorderPane tPane = new BorderPane();
+			tPane.prefHeightProperty().bind(tetScene.heightProperty());
+			tPane.prefWidthProperty().bind(tetScene.widthProperty());
+
+			 Platform.runLater(() -> {
+			 	tPane.setTop(vBox);
+			 	root.getChildren().add(tPane);
+			     });
+			tetStage.setScene(new Scene(root));
+		tetStage.setTitle("Tetris");
+			
+		tetStage.sizeToScene();
+		tetStage.show();
+			//Show new stage with root.
+			tet.start(new Stage());
+			System.out.println("it worked!");
+		    });
+	t.setDaemon(true);
+	t.start();
+	 });
+		tetris.setOnAction(actionEvent -> {
+		
+		tPane.getChildren().addAll(vBox,vBox3);
+		stage.setScene(new Scene(tPane, 1000, 650));
+	   });
+
 
 	//exits game without exiting application 
 	exitGame.setOnAction(actionEvent -> {
@@ -148,7 +207,7 @@ public class ArcadeApp extends Application {
 
 	// the group must request input focus to receive key events
 	// @see https://docs.oracle.com/javase/8/javafx/api/javafx/scene/Node.html#requestFocus--
-	//	group.requestFocus();
+		group.requestFocus();
 
     } // start
 
@@ -163,6 +222,9 @@ public class ArcadeApp extends Application {
 	    System.exit(1);
 	} // try
     } // main
+
+    
+		    
 
 } // ArcadeApp
 

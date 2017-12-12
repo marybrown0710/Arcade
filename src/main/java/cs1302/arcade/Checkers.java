@@ -144,23 +144,6 @@ public class Checkers{
 			     }
 		     } //elseif
 		 }//else
-	     //	     for (int i = 0; i < 8; i++)
-	     // {
-	     //	 for(int v = 0; v < 8; v++)
-	     //	     {
-	     //		if(chBoard[i][v].pieceOn() == true)
-	     //		    {
-	     //			if (chBoard[i][v].getChPiece().getType() == PieceType.RED)
-	     //			    {
-	     //				redCount++;
-	     //			    }
-	     //			else if (chBoard[i][v].getChPiece().getType() == PieceType.WHITE)
-	     //			    {
-	     //				whiteCount++;
-	     //			    }
-	     //		    }
-	     //	     }//for
-	     // }//for
 	     System.out.println("RED PLAYER SCORE: " + (12 - whiteCount));
 	     System.out.println("WHITE PLAYER SCORE: " + (12 - redCount));
 	     if (12 - whiteCount == 0)
